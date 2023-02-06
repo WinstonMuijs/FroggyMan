@@ -1,11 +1,13 @@
 import pygame
+from os import walk
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, group, pos):
         super().__init__(group)
         self.index = 0
-        self.animation = self.import_frogman()
+        # self.animation =
+        self.import_frogman()
         self.image = self.animation[self.index]
         self.rect = self.image.get_rect(center=pos)
         self.pos = pygame.math.Vector2(self.rect.center)
@@ -15,7 +17,22 @@ class Player(pygame.sprite.Sprite):
     def import_frogman(self):
         path = "./graphics/player/right/"
         self.animation = [pygame.image.load(f'{path}{frogman}.png').convert_alpha() for frogman in range(4)]
-        return self.animation
+        # return self.animation
+
+        # animations
+        self.animations = {}
+        for index, folder in enumerate(walk("./graphics/player")):
+            if index == 0:
+                for name in folder[1]:
+                    self.animations[name] = []
+            else:
+                for file_name in folder[2]:
+                    path = folder[0] + '/' + file_name
+                    surf = pygame.image.load(path).convert_alpha()
+                    key = folder[0].split('/')[-1]
+                    self.animations[key].append(surf)
+        return self.animations
+
 
     def movement(self, dt):
         # normalize the length vector for diagonal direction speed
@@ -34,7 +51,6 @@ class Player(pygame.sprite.Sprite):
 
     def keyboard_input(self, dt):
         keys = pygame.key.get_pressed()
-        self.image = self.animation[0]
         if keys[pygame.K_RIGHT]:
             self.direction.x = 1
             self.animation_player(dt)
