@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
             self.index = 0
         self.image = current_animation[self.index]
 
-    def keyboard_input(self, dt):
+    def keyboard_input(self):
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_RIGHT]:
@@ -74,5 +74,5 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, dt):
         self.animation_player(dt)
-        self.keyboard_input(dt)
+        self.keyboard_input()
         self.movement(dt)
